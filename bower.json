@@ -1,0 +1,25 @@
+{
+  "name": "purescript-unfoldable",
+  "description": "Unfoldable Functors",
+  "keywords": ["purescript"],
+  "ignore": [
+    "**/.*",
+    "bower_components",
+    "node_modules",
+    "output",
+    "tests",
+    "js",
+    "tmp",
+    "bower.json",
+    "Gruntfile.js",
+    "package.json"
+  ],
+  "dependencies": {
+    "purescript-arrays"               : "*",
+    "purescript-tuples"               : "*",
+    "purescript-maybe"                : "*"
+  },
+  "devDependencies": {
+    "purescript-quickcheck"           : "*"
+  }
+}
