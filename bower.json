@@ -18,8 +18,5 @@
     "purescript-arrays"               : "*",
     "purescript-tuples"               : "*",
     "purescript-maybe"                : "*"
-  },
-  "devDependencies": {
-    "purescript-quickcheck"           : "*"
   }
 }

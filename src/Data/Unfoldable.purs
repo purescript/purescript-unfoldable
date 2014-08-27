@@ -2,24 +2,30 @@ module Data.Unfoldable where
 
 import Data.Maybe
 import Data.Tuple
-import Data.Function
+import Control.Monad.Eff
+import Control.Monad.ST
 
 class Unfoldable t where
   unfoldr :: forall a b. (b -> Maybe (Tuple a b)) -> b -> t a
  
-foreign import unfoldrArray 
-  "function unfoldrArray(f, b) {\
-  \  var result = [];\
-  \  while (true) {\
-  \    var maybe = f(b);\
-  \    if (maybe.ctor === \"Data.Maybe.Nothing\") {\
-  \      return result;\
-  \    } else if (maybe.ctor === \"Data.Maybe.Just\") {\
-  \      result.push(maybe.values[0].values[0]);\
-  \      b = maybe.values[0].values[1];\
-  \    }\
-  \  }\
-  \}" :: forall a b. Fn2 (b -> Maybe (Tuple a b)) b [a]
+foreign import newEmptySTArray 
+  "function newEmptySTArray() {\
+  \  return [];\
+  \}" :: forall eff h a. Eff (st :: ST h | eff) (STArray h a)
 
 instance unfoldableArray :: Unfoldable [] where
-  unfoldr = runFn2 unfoldrArray
+  unfoldr f b = runPure (runSTArray (do
+    arr  <- newEmptySTArray
+    seed <- newSTRef b
+    idx  <- newSTRef 0
+    untilE $ do
+      b1 <- readSTRef seed
+      case f b1 of
+        Nothing -> return true
+        Just (Tuple a b2) -> do
+          i <- readSTRef idx
+          pokeSTArray arr i a
+          writeSTRef seed b2
+          writeSTRef idx (i + 1)
+          return false
+    return arr))
