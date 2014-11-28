@@ -15,7 +15,7 @@
     "package.json"
   ],
   "dependencies": {
-    "purescript-arrays"               : "~0.2.2",
+    "purescript-arrays"               : "~0.3.0",
     "purescript-tuples"               : "*",
     "purescript-maybe"                : "*"
   }
