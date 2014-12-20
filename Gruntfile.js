@@ -2,38 +2,51 @@ module.exports = function(grunt) {
 
   "use strict";
 
-  grunt.initConfig({ 
-  
+  grunt.initConfig({
+
     libFiles: [
       "src/**/*.purs",
       "bower_components/purescript-*/src/**/*.purs"
     ],
-    
-    clean: ["output"],
-  
-    pscMake: {
-      lib: {
-        src: ["<%=libFiles%>"]
-      }
+
+    clean: ["output", "tmp"],
+
+    pscMake: ["<%=libFiles%>"],
+    dotPsci: ["<%=libFiles%>"],
+    pscDocs: {
+        readme: {
+            src: "src/**/*.purs",
+            dest: "README.md"
+        }
     },
 
     psc: {
-      options: {
-        modules: ["Main"],
-        main: "Main"
-      },
-      example: {
-        src: ["<%=libFiles%>", "examples/*.purs"],
-        dest: "dist/Main.js"  
+      collatzExample: {
+        options: {
+          modules: ["Main"],
+          main: "Main"
+        },
+        src: ["<%=libFiles%>", "examples/Collatz.purs"],
+        dest: "tmp/Collatz.js"
       }
     },
 
-    dotPsci: ["<%=libFiles%>"]
+    execute: {
+      collatzExample: {
+        src: "tmp/Collatz.js"
+      }
+    },
+
+    jsvalidate: ["output/**/*.js"]
+
   });
 
   grunt.loadNpmTasks("grunt-contrib-clean");
+  grunt.loadNpmTasks("grunt-execute");
+  grunt.loadNpmTasks("grunt-jsvalidate");
   grunt.loadNpmTasks("grunt-purescript");
- 
-  grunt.registerTask("make", ["pscMake:lib", "dotPsci", "psc:example"]);
+
+  grunt.registerTask("make", ["pscMake", "dotPsci", "pscDocs", "jsvalidate"]);
+  grunt.registerTask("examples", ["psc", "execute"]);
   grunt.registerTask("default", ["clean", "make"]);
 };

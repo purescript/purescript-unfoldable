@@ -1,11 +1,13 @@
-# purescript-unfoldable
+# Module Documentation
 
-Unfoldable Functors
+## Module Data.Unfoldable
 
-## Building
+### Type Classes
 
-```
-npm install
-bower update
-grunt
-```
+    class Unfoldable t where
+      unfoldr :: forall a b. (b -> Maybe (Tuple a b)) -> b -> t a
+
+
+### Type Class Instances
+
+    instance unfoldableArray :: Unfoldable Prim.Array
