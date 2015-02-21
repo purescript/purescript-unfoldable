@@ -2,12 +2,16 @@
 
 ## Module Data.Unfoldable
 
-### Type Classes
+#### `Unfoldable`
 
-    class Unfoldable t where
-      unfoldr :: forall a b. (b -> Maybe (Tuple a b)) -> b -> t a
+``` purescript
+class Unfoldable t where
+  unfoldr :: forall a b. (b -> Maybe (Tuple a b)) -> b -> t a
+```
 
 
-### Type Class Instances
+#### `unfoldableArray`
 
-    instance unfoldableArray :: Unfoldable Prim.Array
+``` purescript
+instance unfoldableArray :: Unfoldable Prim.Array
+```
