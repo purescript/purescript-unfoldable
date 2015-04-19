@@ -4,13 +4,16 @@ import Data.Tuple
 import Data.Maybe
 import Data.Array
 import Data.Unfoldable
+import Data.Int
 
-import Debug.Trace
+import Console
 
-collatz :: Number -> [Number]
+collatz :: Int -> [Int]
 collatz = unfoldr step 
   where
-  step 1 = Nothing
-  step n = Just $ Tuple n $ if n % 2 == 0 then n / 2 else n * 3 + 1
+  step n | n == one = Nothing
+         | otherwise = Just $ Tuple n $ if n `mod` fromNumber 2 == zero 
+                                          then n / fromNumber 2 
+                                          else n * fromNumber 3 + one
 
-main = print $ collatz 1000
+main = print $ collatz $ fromNumber 1000

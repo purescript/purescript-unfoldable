@@ -21,5 +21,8 @@
     "purescript-arrays": "~0.4.0",
     "purescript-maybe": "~0.3.0",
     "purescript-tuples": "~0.4.0"
+  },
+  "devDependencies": {
+    "purescript-console": "~0.1.0"
   }
 }
