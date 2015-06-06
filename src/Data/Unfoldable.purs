@@ -6,6 +6,8 @@
 
 module Data.Unfoldable where
 
+import Prelude
+
 import Data.Maybe
 import Data.Tuple
 import Data.Array.ST
@@ -23,7 +25,7 @@ import Control.Monad.ST
 class Unfoldable t where
   unfoldr :: forall a b. (b -> Maybe (Tuple a b)) -> b -> t a
  
-instance unfoldableArray :: Unfoldable [] where
+instance unfoldableArray :: Unfoldable Array where
   unfoldr f b = runPure (runSTArray (do
     arr  <- emptySTArray
     seed <- newSTRef b

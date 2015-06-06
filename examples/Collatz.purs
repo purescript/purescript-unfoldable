@@ -1,5 +1,7 @@
 module Main where
 
+import Prelude
+
 import Data.Tuple
 import Data.Maybe
 import Data.Array
@@ -8,7 +10,7 @@ import Data.Int
 
 import Console
 
-collatz :: Int -> [Int]
+collatz :: Int -> Array Int
 collatz = unfoldr step 
   where
   step n | n == one = Nothing
