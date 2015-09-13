@@ -27,4 +27,51 @@ The generating function `f` in `unfoldr f` in understood as follows:
 instance unfoldableArray :: Unfoldable Array
 ```
 
+#### `replicate`
+
+``` purescript
+replicate :: forall f a. (Unfoldable f) => Int -> a -> f a
+```
+
+Replicate a value some natural number of times.
+For example:
+
+~~~ purescript
+replicate 2 "foo" == ["foo", "foo"] :: Array String
+~~~
+
+#### `replicateA`
+
+``` purescript
+replicateA :: forall m f a. (Applicative m, Unfoldable f, Traversable f) => Int -> m a -> m (f a)
+```
+
+Perform an Applicative action `n` times, and accumulate all the results.
+
+#### `none`
+
+``` purescript
+none :: forall f a. (Unfoldable f) => f a
+```
+
+The container with no elements - unfolded with zero iterations.
+For example:
+
+~~~ purescript
+none == [] :: forall a. Array a
+~~~
+
+#### `singleton`
+
+``` purescript
+singleton :: forall f a. (Unfoldable f) => a -> f a
+```
+
+Contain a single value.
+For example:
+
+~~~ purescript
+singleton "foo" == ["foo"] :: Array String
+~~~
+
 
