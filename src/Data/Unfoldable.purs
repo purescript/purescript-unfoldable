@@ -6,14 +6,14 @@
 
 module Data.Unfoldable where
 
-import Prelude
+import Prelude (class Applicative, unit, const, (-), (<=), return, bind, ($))
 
-import Data.Maybe
-import Data.Tuple
-import Data.Array.ST
-import Data.Traversable
-import Control.Monad.Eff
-import Control.Monad.ST
+import Data.Maybe (Maybe(Nothing, Just))
+import Data.Tuple (Tuple(Tuple))
+import Data.Array.ST (pushSTArray, emptySTArray, runSTArray)
+import Data.Traversable (class Traversable, sequence)
+import Control.Monad.Eff (untilE, runPure)
+import Control.Monad.ST (writeSTRef, readSTRef, newSTRef)
 
 -- | This class identifies data structures which can be _unfolded_,
 -- | generalizing `unfoldr` on arrays.
@@ -76,4 +76,3 @@ none = unfoldr (const Nothing) unit
 -- | ~~~
 singleton :: forall f a. (Unfoldable f) => a -> f a
 singleton = replicate 1
-
