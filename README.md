@@ -12,6 +12,6 @@ Unfoldable functors.
 bower install purescript-unfoldable
 ```
 
-## Module documentation
+## Documentation
 
-- [Data.Unfoldable](docs/Data/Unfoldable.md)
+Module documentation is [published on Pursuit](http://pursuit.purescript.org/packages/purescript-unfoldable).
