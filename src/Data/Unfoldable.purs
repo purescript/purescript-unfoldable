@@ -4,17 +4,21 @@
 -- | This allows us to unify various operations on arrays, lists,
 -- | sequences, etc.
 
-module Data.Unfoldable where
+module Data.Unfoldable
+  ( class Unfoldable, unfoldr
+  , replicate
+  , replicateA
+  , none
+  , singleton
+  ) where
 
 import Prelude
 
-import Control.Monad.Eff (untilE, runPure)
-import Control.Monad.ST (writeSTRef, readSTRef, newSTRef)
-
-import Data.Array.ST (pushSTArray, emptySTArray, runSTArray)
-import Data.Maybe (Maybe(..))
+import Data.Maybe (Maybe(..), isNothing, fromJust)
 import Data.Traversable (class Traversable, sequence)
-import Data.Tuple (Tuple(..))
+import Data.Tuple (Tuple(..), fst, snd)
+
+import Partial.Unsafe (unsafePartial)
 
 -- | This class identifies data structures which can be _unfolded_,
 -- | generalizing `unfoldr` on arrays.
@@ -28,18 +32,17 @@ class Unfoldable t where
   unfoldr :: forall a b. (b -> Maybe (Tuple a b)) -> b -> t a
 
 instance unfoldableArray :: Unfoldable Array where
-  unfoldr f b = runPure (runSTArray (do
-    arr  <- emptySTArray
-    seed <- newSTRef b
-    untilE $ do
-      b1 <- readSTRef seed
-      case f b1 of
-        Nothing -> pure true
-        Just (Tuple a b2) -> do
-          pushSTArray arr a
-          writeSTRef seed b2
-          pure false
-    pure arr))
+  unfoldr = unfoldrArrayImpl isNothing (unsafePartial fromJust) fst snd
+
+foreign import unfoldrArrayImpl
+  :: forall a b
+   . (forall x. Maybe x -> Boolean)
+  -> (forall x. Maybe x -> x)
+  -> (forall x y. Tuple x y -> x)
+  -> (forall x y. Tuple x y -> y)
+  -> (b -> Maybe (Tuple a b))
+  -> b
+  -> Array a
 
 -- | Replicate a value some natural number of times.
 -- | For example:
