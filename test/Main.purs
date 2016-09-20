@@ -8,7 +8,6 @@ import Control.Monad.Eff.Console (CONSOLE, log, logShow)
 import Data.Maybe (Maybe(..))
 import Data.Tuple (Tuple(..))
 import Data.Unfoldable as U
-import Data.Unfoldable.Maybe as Maybe
 
 import Test.Assert (ASSERT, assert)
 
@@ -44,7 +43,7 @@ main = do
   ]
 
   log "Test Maybe.toUnfoldable"
-  assert $ Maybe.toUnfoldable (Just "a") == ["a"]
-  assert $ Maybe.toUnfoldable (Nothing :: Maybe String) == []
+  assert $ U.fromMaybe (Just "a") == ["a"]
+  assert $ U.fromMaybe (Nothing :: Maybe String) == []
 
   log "All done!"
