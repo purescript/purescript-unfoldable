@@ -10,6 +10,7 @@ module Data.Unfoldable
   , replicateA
   , none
   , singleton
+  , fromMaybe
   ) where
 
 import Prelude
@@ -84,3 +85,7 @@ none = unfoldr (const Nothing) unit
 -- | ~~~
 singleton :: forall f a. Unfoldable f => a -> f a
 singleton = replicate 1
+
+-- | Convert a Maybe to any Unfoldable like lists and arrays.
+fromMaybe :: forall f a. Unfoldable f => Maybe a -> f a
+fromMaybe = unfoldr (\b -> flip Tuple Nothing <$> b)
