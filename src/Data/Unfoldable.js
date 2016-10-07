@@ -1,7 +1,5 @@
 "use strict";
 
-// module Data.Unfoldable
-
 exports.unfoldrArrayImpl = function (isNothing) {
   return function (fromJust) {
     return function (fst) {
