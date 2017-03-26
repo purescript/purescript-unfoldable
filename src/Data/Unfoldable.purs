@@ -62,7 +62,9 @@ replicate n v = unfoldr step n
 -- | Perform an Applicative action `n` times, and accumulate all the results.
 replicateA
   :: forall m f a
-   . (Applicative m, Unfoldable f, Traversable f)
+   . Applicative m
+  => Unfoldable f
+  => Traversable f
   => Int
   -> m a
   -> m (f a)

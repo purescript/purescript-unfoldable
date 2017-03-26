@@ -7,12 +7,13 @@ exports.unfoldrArrayImpl = function (isNothing) {
         return function (f) {
           return function (b) {
             var result = [];
-            while (true) {
-              var maybe = f(b);
+            var value = b;
+            while (true) { // eslint-disable-line no-constant-condition
+              var maybe = f(value);
               if (isNothing(maybe)) return result;
               var tuple = fromJust(maybe);
               result.push(fst(tuple));
-              b = snd(tuple);
+              value = snd(tuple);
             }
           };
         };
