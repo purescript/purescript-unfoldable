@@ -8,6 +8,7 @@ module Data.Unfoldable
   ( class Unfoldable, unfoldr
   , replicate
   , replicateA
+  , generate
   , none
   , singleton
   , fromMaybe
@@ -69,6 +70,20 @@ replicateA
   -> m a
   -> m (f a)
 replicateA n m = sequence (replicate n m)
+
+-- | Construct an Unfoldable by applying a function to an incremented index.
+-- | For example:
+-- |
+-- | ~~~ purescript
+-- | generate 3 show == ["0", "1", "2"] :: Array String
+-- | ~~~
+generate :: forall f a. Unfoldable f => Int -> (Int -> a) -> f a
+generate n f = unfoldr step 0
+  where
+    step :: Int -> Maybe (Tuple a Int)
+    step i =
+      if i >= n then Nothing
+      else Just (Tuple (f i) (i + 1))
 
 -- | The container with no elements - unfolded with zero iterations.
 -- | For example:

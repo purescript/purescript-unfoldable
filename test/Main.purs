@@ -42,6 +42,9 @@ main = do
     [2,1,1],[2,1,2], [2,2,1],[2,2,2]
   ]
 
+  log "Test generate"
+  assert $ U.generate 3 show == ["0", "1", "2"]
+
   log "Test Maybe.toUnfoldable"
   assert $ U.fromMaybe (Just "a") == ["a"]
   assert $ U.fromMaybe (Nothing :: Maybe String) == []
