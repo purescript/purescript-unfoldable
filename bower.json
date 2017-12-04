@@ -18,7 +18,8 @@
   ],
   "dependencies": {
     "purescript-partial": "^1.2.0",
-    "purescript-tuples": "^4.0.0"
+    "purescript-tuples": "^4.0.0",
+    "purescript-control": "^3.3.1"
   },
   "devDependencies": {
     "purescript-assert": "^3.0.0",
