@@ -42,6 +42,11 @@ main = do
     [2,1,1],[2,1,2], [2,2,1],[2,2,2]
   ]
 
+  log "Test range"
+  assert $ U.range 1 0 == []
+  assert $ U.range 0 0 == [0]
+  assert $ U.range 0 2 == [0, 1, 2]
+
   log "Test Maybe.toUnfoldable"
   assert $ U.fromMaybe (Just "a") == ["a"]
   assert $ U.fromMaybe (Nothing :: Maybe String) == []
