@@ -10,6 +10,7 @@ module Data.Unfoldable
   , replicateA
   , none
   , singleton
+  , range
   , fromMaybe
   ) where
 
@@ -87,6 +88,11 @@ none = unfoldr (const Nothing) unit
 -- | ~~~
 singleton :: forall f a. Unfoldable f => a -> f a
 singleton = replicate 1
+
+-- | Create an Unfoldable containing a range of values, with both endpoints.
+range :: forall f. Unfoldable f => Int -> Int -> f Int
+range start end =
+  unfoldr (\i -> if i <= end then Just (Tuple i $ i + 1) else Nothing) start
 
 -- | Convert a Maybe to any Unfoldable like lists and arrays.
 fromMaybe :: forall f a. Unfoldable f => Maybe a -> f a
