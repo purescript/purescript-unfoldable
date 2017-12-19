@@ -11,15 +11,16 @@ module Data.Unfoldable
   , none
   , singleton
   , range
+  , nats
   , fromMaybe
   ) where
 
 import Prelude
 
+import Control.Lazy (class Lazy)
 import Data.Maybe (Maybe(..), isNothing, fromJust)
 import Data.Traversable (class Traversable, sequence)
 import Data.Tuple (Tuple(..), fst, snd)
-
 import Partial.Unsafe (unsafePartial)
 
 -- | This class identifies data structures which can be _unfolded_,
@@ -93,6 +94,15 @@ singleton = replicate 1
 range :: forall f. Unfoldable f => Int -> Int -> f Int
 range start end =
   unfoldr (\i -> if i <= end then Just (Tuple i $ i + 1) else Nothing) start
+
+-- | Produce a Lazy Unfoldable structure representing the natural numbers.
+--
+-- The result of this function is infinite.
+nats :: forall f a. Unfoldable f => Semiring a => Lazy (f a) => f a
+nats = unfoldr increment zero
+  where
+    increment :: a -> Maybe (Tuple a a)
+    increment a = Just (Tuple a $ add one a)
 
 -- | Convert a Maybe to any Unfoldable like lists and arrays.
 fromMaybe :: forall f a. Unfoldable f => Maybe a -> f a
