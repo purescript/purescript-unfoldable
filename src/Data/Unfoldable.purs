@@ -10,6 +10,7 @@ module Data.Unfoldable
   , replicateA
   , none
   , singleton
+  , iterate
   , range
   , fromMaybe
   ) where
@@ -88,6 +89,17 @@ none = unfoldr (const Nothing) unit
 -- | ~~~
 singleton :: forall f a. Unfoldable f => a -> f a
 singleton = replicate 1
+
+-- | Produce an Unfoldable structure by iterating a function.
+-- | 
+-- | Note that this can diverge if you are not careful.
+-- | For example, to produce integers starting with zero:
+-- |
+-- | ~~~ purescript
+-- | nats = iterate add zero
+-- | ~~~
+iterate :: forall f a. Unfoldable f => (a -> a) -> a -> f a
+iterate f = unfoldr (\x -> Just (Tuple x (f x)))
 
 -- | Create an Unfoldable containing a range of values, with both endpoints.
 range :: forall f. Unfoldable f => Int -> Int -> f Int
