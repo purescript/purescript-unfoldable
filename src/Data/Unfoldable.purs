@@ -16,10 +16,11 @@ module Data.Unfoldable
 
 import Prelude
 
-import Data.Maybe (Maybe(..), isNothing, fromJust)
+import Data.Maybe (Maybe(..), fromJust, isNothing, maybe)
+import Data.Maybe.First (First(..))
+import Data.Maybe.Last (Last(..))
 import Data.Traversable (class Traversable, sequence)
 import Data.Tuple (Tuple(..), fst, snd)
-
 import Partial.Unsafe (unsafePartial)
 
 -- | This class identifies data structures which can be _unfolded_,
@@ -35,6 +36,17 @@ class Unfoldable t where
 
 instance unfoldableArray :: Unfoldable Array where
   unfoldr = unfoldrArrayImpl isNothing (unsafePartial fromJust) fst snd
+
+instance unfoldableFirst :: Unfoldable First where
+  unfoldr step x = First (maybe Nothing (Just <<< fst) (step x))
+
+instance unfoldableLast :: Unfoldable Last where
+  unfoldr step = go Nothing
+    where
+      go accum i =
+        case step i of
+             Just (Tuple a i') -> go (Just a) i'
+             Nothing -> Last accum
 
 foreign import unfoldrArrayImpl
   :: forall a b

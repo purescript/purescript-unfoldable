@@ -4,11 +4,11 @@ import Prelude
 
 import Control.Monad.Eff (Eff)
 import Control.Monad.Eff.Console (CONSOLE, log, logShow)
-
 import Data.Maybe (Maybe(..))
+import Data.Maybe.First (First(..))
+import Data.Maybe.Last (Last(..))
 import Data.Tuple (Tuple(..))
 import Data.Unfoldable as U
-
 import Test.Assert (ASSERT, assert)
 
 collatz :: Int -> Array Int
@@ -29,9 +29,13 @@ main = do
 
   log "Test none"
   assert $ U.none == [] :: Array Unit
+  assert $ U.none == First Nothing :: First Unit
+  assert $ U.none == Last Nothing :: Last Unit
 
   log "Test singleton"
   assert $ U.singleton unit == [unit]
+  assert $ U.singleton unit == First (Just unit)
+  assert $ U.singleton unit == Last (Just unit)
 
   log "Test replicate"
   assert $ U.replicate 3 "foo" == ["foo", "foo", "foo"]
@@ -46,8 +50,10 @@ main = do
   assert $ U.range 1 0 == []
   assert $ U.range 0 0 == [0]
   assert $ U.range 0 2 == [0, 1, 2]
+  assert $ U.range 0 2 == First (Just 0)
+  assert $ U.range 0 2 == Last (Just 2)
 
-  log "Test Maybe.toUnfoldable"
+  log "Test fromMaybe"
   assert $ U.fromMaybe (Just "a") == ["a"]
   assert $ U.fromMaybe (Nothing :: Maybe String) == []
 
