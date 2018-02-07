@@ -11,6 +11,7 @@ module Data.Unfoldable
   , none
   , singleton
   , range
+  , iterateN
   , fromMaybe
   ) where
 
@@ -91,8 +92,20 @@ singleton = replicate 1
 
 -- | Create an Unfoldable containing a range of values, with both endpoints.
 range :: forall f. Unfoldable f => Int -> Int -> f Int
-range start end =
-  unfoldr (\i -> if i <= end then Just (Tuple i $ i + 1) else Nothing) start
+range start end = iterateN (end - start + 1) (_ + 1) start
+
+-- | Create an Unfoldable by repeated application of a function to a seed value.
+-- | For example:
+-- |
+-- | ~~~ purescript
+-- | iterateN 5 (_ + 1) 0 == [0, 1, 2, 3, 4]
+-- | ~~~
+iterateN :: forall f a. Unfoldable f => Int -> (a -> a) -> a -> f a
+iterateN n f s = unfoldr go $ Tuple s n
+  where
+  go (Tuple x n')
+    | n' > 0     = Just $ Tuple x $ Tuple (f x) $ n' - 1
+    | otherwise = Nothing
 
 -- | Convert a Maybe to any Unfoldable like lists and arrays.
 fromMaybe :: forall f a. Unfoldable f => Maybe a -> f a
