@@ -22,8 +22,7 @@ import Data.Tuple (Tuple(..), fst, snd)
 
 import Partial.Unsafe (unsafePartial)
 
--- | This class identifies data structures which can be _unfolded_,
--- | generalizing `unfoldr` on arrays.
+-- | This class identifies data structures which can be _unfolded_.
 -- |
 -- | The generating function `f` in `unfoldr f` in understood as follows:
 -- |
