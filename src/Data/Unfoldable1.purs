@@ -9,11 +9,10 @@ module Data.Unfoldable1
 import Prelude
 
 import Data.Maybe (Maybe(..))
-import Data.Traversable (class Traversable, sequence)
+import Data.Semigroup.Traversable (class Traversable1, sequence1)
 import Data.Tuple (Tuple(..))
 
--- | This class identifies non-empty data structures which can be _unfolded_,
--- | generalizing `unfoldr1` on non-empty lists or arrays.
+-- | This class identifies non-empty data structures which can be _unfolded_.
 -- |
 -- | The generating function `f` corresponds to the `uncons` operation of a
 -- | non-empty list or array; it always return a value, and then optionally
@@ -40,13 +39,13 @@ replicate1 n v = unfoldr1 step (n - 1)
 -- | less than one will be ignored), and accumulate the results.
 replicate1A
   :: forall m f a
-   . Applicative m
+   . Apply m
   => Unfoldable1 f
-  => Traversable f
+  => Traversable1 f
   => Int
   -> m a
   -> m (f a)
-replicate1A n m = sequence (replicate1 n m)
+replicate1A n m = sequence1 (replicate1 n m)
 
 -- | Contain a single value. For example:
 -- |
