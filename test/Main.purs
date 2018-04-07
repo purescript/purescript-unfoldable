@@ -4,12 +4,18 @@ import Prelude
 
 import Control.Monad.Eff (Eff)
 import Control.Monad.Eff.Console (CONSOLE, log, logShow)
-
 import Data.Maybe (Maybe(..))
-import Data.Tuple (Tuple(..))
+import Data.Tuple (Tuple(..), uncurry)
 import Data.Unfoldable as U
-
+import Data.Unfoldable1 as U1
 import Test.Assert (ASSERT, assert)
+
+data NonEmpty f a = NonEmpty a (f a)
+
+derive instance eqNonEmpty :: (Eq (f a), Eq a) => Eq (NonEmpty f a)
+
+instance unfoldable1NonEmpty :: U.Unfoldable f => U1.Unfoldable1 (NonEmpty f) where
+  unfoldr1 f = uncurry NonEmpty <<< map (U.unfoldr $ map f) <<< f
 
 collatz :: Int -> Array Int
 collatz = U.unfoldr step
@@ -32,9 +38,13 @@ main = do
 
   log "Test singleton"
   assert $ U.singleton unit == [unit]
+  assert $ U1.singleton unit == NonEmpty unit []
 
   log "Test replicate"
+  assert $ U.replicate 0 "foo" == []
   assert $ U.replicate 3 "foo" == ["foo", "foo", "foo"]
+  assert $ U1.replicate1 0 "foo" == NonEmpty "foo" []
+  assert $ U1.replicate1 3 "foo" == NonEmpty "foo" ["foo", "foo"]
 
   log "Test replicateA"
   assert $ U.replicateA 3 [1,2] == [
@@ -42,10 +52,15 @@ main = do
     [2,1,1],[2,1,2], [2,2,1],[2,2,2]
   ]
 
-  log "Test range"
+  log "Test U.range"
   assert $ U.range 1 0 == []
   assert $ U.range 0 0 == [0]
   assert $ U.range 0 2 == [0, 1, 2]
+
+  log "Test U1.range"
+  assert $ U1.range 1 0 == NonEmpty 1 [0]
+  assert $ U1.range 0 0 == NonEmpty 0 []
+  assert $ U1.range 0 2 == NonEmpty 0 [1, 2]
 
   log "Test Maybe.toUnfoldable"
   assert $ U.fromMaybe (Just "a") == ["a"]
