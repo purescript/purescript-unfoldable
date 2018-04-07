@@ -35,7 +35,7 @@ replicate1 n v = unfoldr1 step (n - 1)
       | i <= 0 = Tuple v Nothing
       | otherwise = Tuple v (Just (i - 1))
 
--- | Perform an `Applicative` action `n` times (at least once, so values `n < 1`
+-- | Perform an `Apply` action `n` times (at least once, so values `n < 1`
 -- | less than one will be ignored), and accumulate the results.
 replicate1A
   :: forall m f a
