@@ -17,11 +17,11 @@
     "package.json"
   ],
   "dependencies": {
-    "purescript-partial": "^1.2.0",
-    "purescript-tuples": "^4.0.0"
+    "purescript-partial": "#compiler/0.12",
+    "purescript-tuples": "#compiler/0.12"
   },
   "devDependencies": {
-    "purescript-assert": "^3.0.0",
-    "purescript-console": "^3.0.0"
+    "purescript-assert": "#compiler/0.12",
+    "purescript-console": "#compiler/0.12"
   }
 }
