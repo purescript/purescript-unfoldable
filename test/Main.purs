@@ -2,13 +2,13 @@ module Test.Main where
 
 import Prelude
 
-import Effect (Effect)
-import Effect.Console (log, logShow)
 import Data.Eq (class Eq1)
 import Data.Maybe (Maybe(..))
 import Data.Tuple (Tuple(..), uncurry)
 import Data.Unfoldable as U
 import Data.Unfoldable1 as U1
+import Effect (Effect)
+import Effect.Console (log, logShow)
 import Test.Assert (assert)
 
 data NonEmpty f a = NonEmpty a (f a)
@@ -53,12 +53,10 @@ main = do
     [2,1,1],[2,1,2], [2,2,1],[2,2,2]
   ]
 
-  log "Test U.range"
-  assert $ U.range 1 0 == []
-  assert $ U.range 0 0 == [0]
-  assert $ U.range 0 2 == [0, 1, 2]
-
-  log "Test U1.range"
+  log "Test range"
+  assert $ U1.range 1 0 == [1, 0]
+  assert $ U1.range 0 0 == [0]
+  assert $ U1.range 0 2 == [0, 1, 2]
   assert $ U1.range 1 0 == NonEmpty 1 [0]
   assert $ U1.range 0 0 == NonEmpty 0 []
   assert $ U1.range 0 2 == NonEmpty 0 [1, 2]

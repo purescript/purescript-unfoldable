@@ -9,9 +9,8 @@ module Data.Unfoldable
   , replicate
   , replicateA
   , none
-  , singleton
-  , range
   , fromMaybe
+  , module Data.Unfoldable1
   ) where
 
 import Prelude
@@ -19,7 +18,7 @@ import Prelude
 import Data.Maybe (Maybe(..), isNothing, fromJust)
 import Data.Traversable (class Traversable, sequence)
 import Data.Tuple (Tuple(..), fst, snd)
-
+import Data.Unfoldable1 (class Unfoldable1, unfoldr1, singleton, range, replicate1, replicate1A)
 import Partial.Unsafe (unsafePartial)
 
 -- | This class identifies data structures which can be _unfolded_.
@@ -29,7 +28,7 @@ import Partial.Unsafe (unsafePartial)
 -- | - If `f b` is `Nothing`, then `unfoldr f b` should be empty.
 -- | - If `f b` is `Just (Tuple a b1)`, then `unfoldr f b` should consist of `a`
 -- |   appended to the result of `unfoldr f b1`.
-class Unfoldable t where
+class Unfoldable1 t <= Unfoldable t where
   unfoldr :: forall a b. (b -> Maybe (Tuple a b)) -> b -> t a
 
 instance unfoldableArray :: Unfoldable Array where
@@ -48,9 +47,9 @@ foreign import unfoldrArrayImpl
 -- | Replicate a value some natural number of times.
 -- | For example:
 -- |
--- | ~~~ purescript
+-- | ``` purescript
 -- | replicate 2 "foo" == ["foo", "foo"] :: Array String
--- | ~~~
+-- | ```
 replicate :: forall f a. Unfoldable f => Int -> a -> f a
 replicate n v = unfoldr step n
   where
@@ -73,25 +72,11 @@ replicateA n m = sequence (replicate n m)
 -- | The container with no elements - unfolded with zero iterations.
 -- | For example:
 -- |
--- | ~~~ purescript
+-- | ``` purescript
 -- | none == [] :: forall a. Array a
--- | ~~~
+-- | ```
 none :: forall f a. Unfoldable f => f a
 none = unfoldr (const Nothing) unit
-
--- | Contain a single value.
--- | For example:
--- |
--- | ~~~ purescript
--- | singleton "foo" == ["foo"] :: Array String
--- | ~~~
-singleton :: forall f a. Unfoldable f => a -> f a
-singleton = replicate 1
-
--- | Create an Unfoldable containing a range of values, with both endpoints.
-range :: forall f. Unfoldable f => Int -> Int -> f Int
-range start end =
-  unfoldr (\i -> if i <= end then Just (Tuple i $ i + 1) else Nothing) start
 
 -- | Convert a Maybe to any Unfoldable like lists and arrays.
 fromMaybe :: forall f a. Unfoldable f => Maybe a -> f a

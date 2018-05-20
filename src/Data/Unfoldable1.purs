@@ -8,9 +8,10 @@ module Data.Unfoldable1
 
 import Prelude
 
-import Data.Maybe (Maybe(..))
+import Data.Maybe (Maybe(..), fromJust, isNothing)
 import Data.Semigroup.Traversable (class Traversable1, sequence1)
-import Data.Tuple (Tuple(..))
+import Data.Tuple (Tuple(..), fst, snd)
+import Partial.Unsafe (unsafePartial)
 
 -- | This class identifies non-empty data structures which can be _unfolded_.
 -- |
@@ -19,6 +20,19 @@ import Data.Tuple (Tuple(..))
 -- | a value to continue unfolding from.
 class Unfoldable1 t where
   unfoldr1 :: forall a b. (b -> Tuple a (Maybe b)) -> b -> t a
+
+instance unfoldable1Array :: Unfoldable1 Array where
+  unfoldr1 = unfoldr1ArrayImpl isNothing (unsafePartial fromJust) fst snd
+
+foreign import unfoldr1ArrayImpl
+  :: forall a b
+   . (forall x. Maybe x -> Boolean)
+  -> (forall x. Maybe x -> x)
+  -> (forall x y. Tuple x y -> x)
+  -> (forall x y. Tuple x y -> y)
+  -> (b -> Tuple a (Maybe b))
+  -> b
+  -> Array a
 
 -- | Replicate a value `n` times. At least one value will be produced, so values
 -- | `n < 1` less than one will be ignored.
