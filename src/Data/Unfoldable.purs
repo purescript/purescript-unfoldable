@@ -21,13 +21,20 @@ import Data.Tuple (Tuple(..), fst, snd)
 import Data.Unfoldable1 (class Unfoldable1, unfoldr1, singleton, range, replicate1, replicate1A)
 import Partial.Unsafe (unsafePartial)
 
--- | This class identifies data structures which can be _unfolded_.
+-- | This class identifies (possibly empty) data structures which can be
+-- | _unfolded_.
 -- |
--- | The generating function `f` in `unfoldr f` in understood as follows:
+-- | The generating function `f` in `unfoldr f` is understood as follows:
 -- |
 -- | - If `f b` is `Nothing`, then `unfoldr f b` should be empty.
 -- | - If `f b` is `Just (Tuple a b1)`, then `unfoldr f b` should consist of `a`
 -- |   appended to the result of `unfoldr f b1`.
+-- |
+-- | Note that it is not possible to give `Unfoldable` instances to types which
+-- | represent structures which are guaranteed to be non-empty, such as
+-- | `NonEmptyArray`: consider what `unfoldr (const Nothing)` should produce.
+-- | Structures which are guaranteed to be non-empty can instead be given
+-- | `Unfoldable1` instances.
 class Unfoldable1 t <= Unfoldable t where
   unfoldr :: forall a b. (b -> Maybe (Tuple a b)) -> b -> t a
 
