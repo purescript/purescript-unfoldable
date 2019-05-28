@@ -13,11 +13,28 @@ import Data.Semigroup.Traversable (class Traversable1, sequence1)
 import Data.Tuple (Tuple(..), fst, snd)
 import Partial.Unsafe (unsafePartial)
 
--- | This class identifies non-empty data structures which can be _unfolded_.
+-- | This class identifies data structures which can be _unfolded_.
 -- |
--- | The generating function `f` corresponds to the `uncons` operation of a
--- | non-empty list or array; it always return a value, and then optionally
--- | a value to continue unfolding from.
+-- | The generating function `f` in `unfoldr1 f` corresponds to the `uncons`
+-- | operation of a non-empty list or array; it always returns a value, and
+-- | then optionally a value to continue unfolding from.
+-- |
+-- | Note that, in order to provide an `Unfoldable1 t` instance, `t` need not
+-- | be a type which is guaranteed to be non-empty. For example, the fact that
+-- | arrays can be empty does not prevent us from providing an `Unfoldable1
+-- | Array` instance. However, the result of `unfoldr1` should always be
+-- | non-empty.
+-- |
+-- | Every type which has an `Unfoldable` instance can be given an
+-- | `Unfoldable1` instance (and, in fact, is required to, because
+-- | `Unfoldable1` is a superclass of `Unfoldable`). However, there are types
+-- | which have `Unfoldable1` instances but cannot have `Unfoldable` instances.
+-- | In particular, types which are guaranteed to be non-empty, such as
+-- | `NonEmptyArray`, cannot be given `Unfoldable` instances.
+-- |
+-- | The utility of this class, then, is that it provides an `Unfoldable`-like
+-- | interface while still permitting instances for guaranteed-non-empty types
+-- | like `NonEmptyArray`.
 class Unfoldable1 t where
   unfoldr1 :: forall a b. (b -> Tuple a (Maybe b)) -> b -> t a
 
