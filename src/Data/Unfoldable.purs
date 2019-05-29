@@ -55,7 +55,7 @@ foreign import unfoldrArrayImpl
 -- | For example:
 -- |
 -- | ``` purescript
--- | replicate 2 "foo" == ["foo", "foo"] :: Array String
+-- | replicate 2 "foo" == (["foo", "foo"] :: Array String)
 -- | ```
 replicate :: forall f a. Unfoldable f => Int -> a -> f a
 replicate n v = unfoldr step n
@@ -66,6 +66,11 @@ replicate n v = unfoldr step n
       else Just (Tuple v (i - 1))
 
 -- | Perform an Applicative action `n` times, and accumulate all the results.
+-- |
+-- | ``` purescript
+-- | > replicateA 5 (randomInt 1 10) :: Effect (Array Int)
+-- | [1,3,2,7,5]
+-- | ```
 replicateA
   :: forall m f a
    . Applicative m
@@ -80,11 +85,16 @@ replicateA n m = sequence (replicate n m)
 -- | For example:
 -- |
 -- | ``` purescript
--- | none == [] :: forall a. Array a
+-- | none == ([] :: Array Unit)
 -- | ```
 none :: forall f a. Unfoldable f => f a
 none = unfoldr (const Nothing) unit
 
--- | Convert a Maybe to any Unfoldable like lists and arrays.
+-- | Convert a Maybe to any Unfoldable, such as lists or arrays.
+-- |
+-- | ``` purescript
+-- | fromMaybe (Nothing :: Maybe Int) == []
+-- | fromMaybe (Just 1) == [1]
+-- | ```
 fromMaybe :: forall f a. Unfoldable f => Maybe a -> f a
 fromMaybe = unfoldr (\b -> flip Tuple Nothing <$> b)
