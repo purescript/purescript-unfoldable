@@ -35,7 +35,7 @@ main = do
   logShow $ collatz 1000
 
   log "Test none"
-  assert $ U.none == [] :: Array Unit
+  assert $ U.none == ([] :: Array Unit)
 
   log "Test singleton"
   assert $ U.singleton unit == [unit]
