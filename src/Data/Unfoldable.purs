@@ -41,6 +41,9 @@ class Unfoldable1 t <= Unfoldable t where
 instance unfoldableArray :: Unfoldable Array where
   unfoldr = unfoldrArrayImpl isNothing (unsafePartial fromJust) fst snd
 
+instance unfoldableMaybe :: Unfoldable Maybe where
+  unfoldr f b = fst <$> f b
+
 foreign import unfoldrArrayImpl
   :: forall a b
    . (forall x. Maybe x -> Boolean)
