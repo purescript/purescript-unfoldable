@@ -16,15 +16,15 @@
     "package.json"
   ],
   "dependencies": {
-    "purescript-foldable-traversable": "master",
-    "purescript-maybe": "master",
-    "purescript-partial": "master",
-    "purescript-prelude": "master",
-    "purescript-tuples": "master"
+    "purescript-foldable-traversable": "^5.0.0",
+    "purescript-maybe": "^5.0.0",
+    "purescript-partial": "^3.0.0",
+    "purescript-prelude": "^5.0.0",
+    "purescript-tuples": "^6.0.0"
   },
   "devDependencies": {
-    "purescript-assert": "master",
-    "purescript-console": "master",
-    "purescript-psci-support": "master"
+    "purescript-assert": "^5.0.0",
+    "purescript-console": "^5.0.0",
+    "purescript-psci-support": "^5.0.0"
   }
 }
