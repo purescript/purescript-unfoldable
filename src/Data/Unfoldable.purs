@@ -24,11 +24,26 @@ import Partial.Unsafe (unsafePartial)
 -- | This class identifies (possibly empty) data structures which can be
 -- | _unfolded_.
 -- |
+-- | Just as `Foldable` structures can be collapsed to a single value with
+-- | `foldl` and a provided _folding_ function, `unfoldr` allows generating
+-- | an `Unfoldable` structure from a provided _unfolding_ function and an
+-- | initial seed value.
+-- |
 -- | The generating function `f` in `unfoldr f` is understood as follows:
 -- |
 -- | - If `f b` is `Nothing`, then `unfoldr f b` should be empty.
 -- | - If `f b` is `Just (Tuple a b1)`, then `unfoldr f b` should consist of `a`
 -- |   appended to the result of `unfoldr f b1`.
+-- |
+-- | For example:
+-- | ``` purescript
+-- | f :: Int -> Maybe (Tuple Int Int)
+-- | f n | n < 0 = Nothing
+-- | f n = Just (Tuple n (n - 1))
+-- |
+-- | unfoldr f 3 == [3, 2, 1, 0]
+-- | unfoldr f 3 == 3 : 2 : 1 : 0 : Nil
+-- | ```
 -- |
 -- | Note that it is not possible to give `Unfoldable` instances to types which
 -- | represent structures which are guaranteed to be non-empty, such as
@@ -55,10 +70,10 @@ foreign import unfoldrArrayImpl
   -> Array a
 
 -- | Replicate a value some natural number of times.
--- | For example:
 -- |
 -- | ``` purescript
--- | replicate 2 "foo" == (["foo", "foo"] :: Array String)
+-- | replicate 2 "foo" == ["foo", "foo"]
+-- | replicate 2 "foo" == "foo" : "foo" : Nil
 -- | ```
 replicate :: forall f a. Unfoldable f => Int -> a -> f a
 replicate n v = unfoldr step n
@@ -73,6 +88,8 @@ replicate n v = unfoldr step n
 -- | ``` purescript
 -- | > replicateA 5 (randomInt 1 10) :: Effect (Array Int)
 -- | [1,3,2,7,5]
+-- | > replicateA 5 (randomInt 1 10) :: _ (List _)
+-- | (4 : 4 : 9 : 8 : 1 : Nil)
 -- | ```
 replicateA
   :: forall m f a
@@ -85,10 +102,11 @@ replicateA
 replicateA n m = sequence (replicate n m)
 
 -- | The container with no elements - unfolded with zero iterations.
--- | For example:
 -- |
 -- | ``` purescript
 -- | none == ([] :: Array Unit)
+-- | none == ([] :: _ Int)
+-- | none == (Nil :: _ Number)
 -- | ```
 none :: forall f a. Unfoldable f => f a
 none = unfoldr (const Nothing) unit
@@ -98,6 +116,7 @@ none = unfoldr (const Nothing) unit
 -- | ``` purescript
 -- | fromMaybe (Nothing :: Maybe Int) == []
 -- | fromMaybe (Just 1) == [1]
+-- | fromMaybe (Just 1) == 1 : Nil
 -- | ```
 fromMaybe :: forall f a. Unfoldable f => Maybe a -> f a
 fromMaybe = unfoldr (\b -> flip Tuple Nothing <$> b)
