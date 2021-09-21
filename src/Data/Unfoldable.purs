@@ -47,7 +47,7 @@ instance unfoldableFirst :: Unfoldable First where
   unfoldr step x = First (maybe Nothing (Just <<< fst) (step x))
 
 instance unfoldableLast :: Unfoldable Last where
-  unfoldr step = go Nothing
+  unfoldr step x = go Nothing x
     where
       go accum i =
         case step i of
