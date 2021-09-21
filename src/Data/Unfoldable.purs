@@ -9,29 +9,35 @@ module Data.Unfoldable
   , replicate
   , replicateA
   , none
-  , singleton
-  , range
   , fromMaybe
+  , module Data.Unfoldable1
   ) where
 
 import Prelude
 
 import Data.Maybe (Maybe(..), fromJust, isNothing, maybe)
-import Data.Maybe.First (First(..))
-import Data.Maybe.Last (Last(..))
+import Data.Semigroup.First (First(..))
+import Data.Semigroup.Last (Last(..))
 import Data.Traversable (class Traversable, sequence)
 import Data.Tuple (Tuple(..), fst, snd)
+import Data.Unfoldable1 (class Unfoldable1, unfoldr1, singleton, range, replicate1, replicate1A)
 import Partial.Unsafe (unsafePartial)
 
--- | This class identifies data structures which can be _unfolded_,
--- | generalizing `unfoldr` on arrays.
+-- | This class identifies (possibly empty) data structures which can be
+-- | _unfolded_.
 -- |
--- | The generating function `f` in `unfoldr f` in understood as follows:
+-- | The generating function `f` in `unfoldr f` is understood as follows:
 -- |
 -- | - If `f b` is `Nothing`, then `unfoldr f b` should be empty.
 -- | - If `f b` is `Just (Tuple a b1)`, then `unfoldr f b` should consist of `a`
 -- |   appended to the result of `unfoldr f b1`.
-class Unfoldable t where
+-- |
+-- | Note that it is not possible to give `Unfoldable` instances to types which
+-- | represent structures which are guaranteed to be non-empty, such as
+-- | `NonEmptyArray`: consider what `unfoldr (const Nothing)` should produce.
+-- | Structures which are guaranteed to be non-empty can instead be given
+-- | `Unfoldable1` instances.
+class Unfoldable1 t <= Unfoldable t where
   unfoldr :: forall a b. (b -> Maybe (Tuple a b)) -> b -> t a
 
 instance unfoldableArray :: Unfoldable Array where
@@ -48,6 +54,9 @@ instance unfoldableLast :: Unfoldable Last where
              Just (Tuple a i') -> go (Just a) i'
              Nothing -> Last accum
 
+instance unfoldableMaybe :: Unfoldable Maybe where
+  unfoldr f b = fst <$> f b
+
 foreign import unfoldrArrayImpl
   :: forall a b
    . (forall x. Maybe x -> Boolean)
@@ -61,9 +70,9 @@ foreign import unfoldrArrayImpl
 -- | Replicate a value some natural number of times.
 -- | For example:
 -- |
--- | ~~~ purescript
--- | replicate 2 "foo" == ["foo", "foo"] :: Array String
--- | ~~~
+-- | ``` purescript
+-- | replicate 2 "foo" == (["foo", "foo"] :: Array String)
+-- | ```
 replicate :: forall f a. Unfoldable f => Int -> a -> f a
 replicate n v = unfoldr step n
   where
@@ -73,6 +82,11 @@ replicate n v = unfoldr step n
       else Just (Tuple v (i - 1))
 
 -- | Perform an Applicative action `n` times, and accumulate all the results.
+-- |
+-- | ``` purescript
+-- | > replicateA 5 (randomInt 1 10) :: Effect (Array Int)
+-- | [1,3,2,7,5]
+-- | ```
 replicateA
   :: forall m f a
    . Applicative m
@@ -86,26 +100,17 @@ replicateA n m = sequence (replicate n m)
 -- | The container with no elements - unfolded with zero iterations.
 -- | For example:
 -- |
--- | ~~~ purescript
--- | none == [] :: forall a. Array a
--- | ~~~
+-- | ``` purescript
+-- | none == ([] :: Array Unit)
+-- | ```
 none :: forall f a. Unfoldable f => f a
 none = unfoldr (const Nothing) unit
 
--- | Contain a single value.
--- | For example:
+-- | Convert a Maybe to any Unfoldable, such as lists or arrays.
 -- |
--- | ~~~ purescript
--- | singleton "foo" == ["foo"] :: Array String
--- | ~~~
-singleton :: forall f a. Unfoldable f => a -> f a
-singleton = replicate 1
-
--- | Create an Unfoldable containing a range of values, with both endpoints.
-range :: forall f. Unfoldable f => Int -> Int -> f Int
-range start end =
-  unfoldr (\i -> if i <= end then Just (Tuple i $ i + 1) else Nothing) start
-
--- | Convert a Maybe to any Unfoldable like lists and arrays.
+-- | ``` purescript
+-- | fromMaybe (Nothing :: Maybe Int) == []
+-- | fromMaybe (Just 1) == [1]
+-- | ```
 fromMaybe :: forall f a. Unfoldable f => Maybe a -> f a
 fromMaybe = unfoldr (\b -> flip Tuple Nothing <$> b)
