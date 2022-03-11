@@ -1,5 +1,3 @@
-"use strict";
-
 export const unfoldr1ArrayImpl = function (isNothing) {
   return function (fromJust) {
     return function (fst) {
