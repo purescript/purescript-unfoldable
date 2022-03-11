@@ -1,6 +1,6 @@
 "use strict";
 
-export var unfoldrArrayImpl = function (isNothing) {
+export const unfoldrArrayImpl = function (isNothing) {
   return function (fromJust) {
     return function (fst) {
       return function (snd) {
