@@ -122,9 +122,9 @@ range start end =
 -- | (iterateN 0 (_ + 1) 0 :: Array Int) == [0]
 -- | (iterateN 0 (_ + 1) 0 :: NonEmptyArray Int) == NonEmptyArray [0]
 -- | ```
-iterateN :: forall f a. Unfoldable f => Int -> (a -> a) -> a -> f a
-iterateN n f s = unfoldr go $ Tuple s (n - 1)
+iterateN :: forall f a. Unfoldable1 f => Int -> (a -> a) -> a -> f a
+iterateN n f s = unfoldr1 go $ Tuple s (n - 1)
   where
-  go (Tuple x n')
-    | n' > 0     = Just $ Tuple x $ Tuple (f x) $ n' - 1
-    | otherwise = Nothing
+  go (Tuple x n') = Tuple x
+    if n' > 0 then Just $ Tuple (f x) $ n' - 1
+    else Nothing
