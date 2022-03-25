@@ -9,8 +9,6 @@ module Data.Unfoldable
   , replicate
   , replicateA
   , none
-  , singleton
-  , range
   , iterateN
   , fromMaybe
   , module Data.Unfoldable1
@@ -95,16 +93,6 @@ replicateA n m = sequence (replicate n m)
 -- | ```
 none :: forall f a. Unfoldable f => f a
 none = unfoldr (const Nothing) unit
-
--- | ``` purescript
--- | singleton "foo" == ["foo"] :: Array String
--- | ```
-singleton :: forall f a. Unfoldable f => a -> f a
-singleton = replicate 1
-
--- | Create an Unfoldable containing a range of values, with both endpoints.
-range :: forall f. Unfoldable f => Int -> Int -> f Int
-range start end = iterateN (end - start + 1) (_ + 1) start
 
 -- | Create an Unfoldable by repeated application of a function to a seed value.
 -- | For example:
