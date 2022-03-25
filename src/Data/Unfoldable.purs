@@ -9,7 +9,6 @@ module Data.Unfoldable
   , replicate
   , replicateA
   , none
-  , iterateN
   , fromMaybe
   , module Data.Unfoldable1
   ) where
@@ -19,7 +18,7 @@ import Prelude
 import Data.Maybe (Maybe(..), isNothing, fromJust)
 import Data.Traversable (class Traversable, sequence)
 import Data.Tuple (Tuple(..), fst, snd)
-import Data.Unfoldable1 (class Unfoldable1, unfoldr1, singleton, range, replicate1, replicate1A)
+import Data.Unfoldable1 (class Unfoldable1, unfoldr1, singleton, range, iterateN, replicate1, replicate1A)
 import Partial.Unsafe (unsafePartial)
 
 -- | This class identifies (possibly empty) data structures which can be
@@ -93,19 +92,6 @@ replicateA n m = sequence (replicate n m)
 -- | ```
 none :: forall f a. Unfoldable f => f a
 none = unfoldr (const Nothing) unit
-
--- | Create an Unfoldable by repeated application of a function to a seed value.
--- | For example:
--- |
--- | ``` purescript
--- | iterateN 5 (_ + 1) 0 == [0, 1, 2, 3, 4]
--- | ```
-iterateN :: forall f a. Unfoldable f => Int -> (a -> a) -> a -> f a
-iterateN n f s = unfoldr go $ Tuple s n
-  where
-  go (Tuple x n')
-    | n' > 0     = Just $ Tuple x $ Tuple (f x) $ n' - 1
-    | otherwise = Nothing
 
 -- | Convert a Maybe to any Unfoldable, such as lists or arrays.
 -- |

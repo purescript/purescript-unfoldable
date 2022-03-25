@@ -111,3 +111,20 @@ range start end =
     go delta i =
       let i' = i + delta
       in Tuple i (if i == end then Nothing else Just i')
+
+-- | Create an `Unfoldable1` by repeated application of a function to a seed value.
+-- | For example:
+-- |
+-- | ``` purescript
+-- | (iterateN 5 (_ + 1) 0 :: Array Int) == [0, 1, 2, 3, 4]
+-- | (iterateN 5 (_ + 1) 0 :: NonEmptyArray Int) == NonEmptyArray [0, 1, 2, 3, 4]
+-- |
+-- | (iterateN 0 (_ + 1) 0 :: Array Int) == [0]
+-- | (iterateN 0 (_ + 1) 0 :: NonEmptyArray Int) == NonEmptyArray [0]
+-- | ```
+iterateN :: forall f a. Unfoldable f => Int -> (a -> a) -> a -> f a
+iterateN n f s = unfoldr go $ Tuple s (n - 1)
+  where
+  go (Tuple x n')
+    | n' > 0     = Just $ Tuple x $ Tuple (f x) $ n' - 1
+    | otherwise = Nothing
