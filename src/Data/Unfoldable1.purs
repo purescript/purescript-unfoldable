@@ -4,6 +4,7 @@ module Data.Unfoldable1
   , replicate1A
   , singleton
   , range
+  , iterateN
   ) where
 
 import Prelude
