@@ -8,6 +8,7 @@ Breaking changes:
 - Migrate FFI to ES modules (#37 by @kl0tl and @JordanMartinez)
 
 New features:
+- Add `iterateN` function (#20 by @matthewleon and @JordanMartinez)
 
 Bugfixes:
 

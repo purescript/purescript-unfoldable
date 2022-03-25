@@ -61,6 +61,9 @@ main = do
   assert $ U1.range 0 0 == NonEmpty 0 []
   assert $ U1.range 0 2 == NonEmpty 0 [1, 2]
 
+  log "Test iterateN"
+  assert $ U.iterateN 5 (_ + 1) 0 == [0, 1, 2, 3, 4]
+
   log "Test Maybe.toUnfoldable"
   assert $ U.fromMaybe (Just "a") == ["a"]
   assert $ U.fromMaybe (Nothing :: Maybe String) == []

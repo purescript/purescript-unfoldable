@@ -18,7 +18,7 @@ import Prelude
 import Data.Maybe (Maybe(..), isNothing, fromJust)
 import Data.Traversable (class Traversable, sequence)
 import Data.Tuple (Tuple(..), fst, snd)
-import Data.Unfoldable1 (class Unfoldable1, unfoldr1, singleton, range, replicate1, replicate1A)
+import Data.Unfoldable1 (class Unfoldable1, unfoldr1, singleton, range, iterateN, replicate1, replicate1A)
 import Partial.Unsafe (unsafePartial)
 
 -- | This class identifies (possibly empty) data structures which can be
