@@ -17,9 +17,11 @@ Other improvements:
 ## [v6.0.0](https://github.com/purescript/purescript-unfoldable/releases/tag/v6.0.0) - 2022-04-27
 
 Breaking changes:
+
 - Migrate FFI to ES modules (#37 by @kl0tl and @JordanMartinez)
 
 New features:
+
 - Add `iterateN` function (#20 by @matthewleon and @JordanMartinez)
 
 Bugfixes:
@@ -29,6 +31,7 @@ Other improvements:
 ## [v5.0.0](https://github.com/purescript/purescript-unfoldable/releases/tag/v5.0.0) - 2021-02-26
 
 Breaking changes:
+
 - Added support for PureScript 0.14 and dropped support for all previous versions (#29)
 
 New features:
@@ -36,6 +39,7 @@ New features:
 Bugfixes:
 
 Other improvements:
+
 - Migrated CI to GitHub Actions and updated installation instructions to use Spago (#30)
 - Added a changelog and pull request template (#32)
 
@@ -103,6 +107,7 @@ This release works with versions 0.7.\* of the PureScript compiler. It will not 
 ## [v0.3.0](https://github.com/purescript/purescript-unfoldable/releases/tag/v0.3.0) - 2015-02-21
 
 **This release requires PureScript v0.6.8 or later**
+
 - Updated dependencies
 
 ## [v0.2.0](https://github.com/purescript/purescript-unfoldable/releases/tag/v0.2.0) - 2014-11-28

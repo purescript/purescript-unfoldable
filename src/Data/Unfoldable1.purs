@@ -1,5 +1,6 @@
 module Data.Unfoldable1
-  ( class Unfoldable1, unfoldr1
+  ( class Unfoldable1
+  , unfoldr1
   , replicate1
   , replicate1A
   , singleton
@@ -65,10 +66,10 @@ foreign import unfoldr1ArrayImpl
 replicate1 :: forall f a. Unfoldable1 f => Int -> a -> f a
 replicate1 n v = unfoldr1 step (n - 1)
   where
-    step :: Int -> Tuple a (Maybe Int)
-    step i
-      | i <= 0 = Tuple v Nothing
-      | otherwise = Tuple v (Just (i - 1))
+  step :: Int -> Tuple a (Maybe Int)
+  step i
+    | i <= 0 = Tuple v Nothing
+    | otherwise = Tuple v (Just (i - 1))
 
 -- | Perform an `Apply` action `n` times (at least once, so values `n` less
 -- | than 1 will be treated as 1), and accumulate the results.
@@ -109,9 +110,11 @@ range :: forall f. Unfoldable1 f => Int -> Int -> f Int
 range start end =
   let delta = if end >= start then 1 else -1 in unfoldr1 (go delta) start
   where
-    go delta i =
-      let i' = i + delta
-      in Tuple i (if i == end then Nothing else Just i')
+  go delta i =
+    let
+      i' = i + delta
+    in
+      Tuple i (if i == end then Nothing else Just i')
 
 -- | Create an `Unfoldable1` by repeated application of a function to a seed value.
 -- | For example:

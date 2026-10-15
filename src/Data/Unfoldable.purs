@@ -5,7 +5,8 @@
 -- | sequences, etc.
 
 module Data.Unfoldable
-  ( class Unfoldable, unfoldr
+  ( class Unfoldable
+  , unfoldr
   , replicate
   , replicateA
   , none
@@ -15,10 +16,10 @@ module Data.Unfoldable
 
 import Prelude
 
-import Data.Maybe (Maybe(..), isNothing, fromJust)
+import Data.Maybe (Maybe(..), fromJust, isNothing)
 import Data.Traversable (class Traversable, sequence)
 import Data.Tuple (Tuple(..), fst, snd)
-import Data.Unfoldable1 (class Unfoldable1, unfoldr1, singleton, range, iterateN, replicate1, replicate1A)
+import Data.Unfoldable1 (class Unfoldable1, iterateN, range, replicate1, replicate1A, singleton, unfoldr1)
 import Partial.Unsafe (unsafePartial)
 
 -- | This class identifies (possibly empty) data structures which can be
@@ -63,10 +64,10 @@ foreign import unfoldrArrayImpl
 replicate :: forall f a. Unfoldable f => Int -> a -> f a
 replicate n v = unfoldr step n
   where
-    step :: Int -> Maybe (Tuple a Int)
-    step i =
-      if i <= 0 then Nothing
-      else Just (Tuple v (i - 1))
+  step :: Int -> Maybe (Tuple a Int)
+  step i =
+    if i <= 0 then Nothing
+    else Just (Tuple v (i - 1))
 
 -- | Perform an Applicative action `n` times, and accumulate all the results.
 -- |
