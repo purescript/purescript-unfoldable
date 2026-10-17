@@ -21,13 +21,16 @@ instance unfoldable1NonEmpty :: U.Unfoldable f => U1.Unfoldable1 (NonEmpty f) wh
 collatz :: Int -> Array Int
 collatz = U.unfoldr step
   where
-  step 1 = Nothing
-  step n =
-    Just
-      $ Tuple n
-      $
-        if n `mod` 2 == 0 then n / 2
-        else n * 3 + 1
+  step = case _ of
+    1 -> Nothing
+    n -> do
+      let
+        next =
+          if n `mod` 2 == 0 then
+            n / 2
+          else
+            n * 3 + 1
+      Just (Tuple n next)
 
 main :: Effect Unit
 main = do
