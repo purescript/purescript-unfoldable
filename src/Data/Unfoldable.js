@@ -6,7 +6,7 @@ export const unfoldrArrayImpl = function (isNothing) {
           return function (b) {
             var result = [];
             var value = b;
-            while (true) { // eslint-disable-line no-constant-condition
+            while (true) {
               var maybe = f(value);
               if (isNothing(maybe)) return result;
               var tuple = fromJust(maybe);
